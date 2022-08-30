@@ -81,7 +81,7 @@ It's easier to find a system that is similar to the target system and compile th
 
 The assumption is that it is not possible to compile the exploit on the target system. Instead we use a system with the same architecture and where the Linux flavour is a close match to the target system (a matching libc version often is what matters most).
 
-AWS has a good selection Linux systems (Ubuntu, Red Hat, SuSE and Debian). It is free to spin up a ARM64 (aarch64) t2.nano instance and compile an exploit. THC also runs a private lab with various other architectures and Unix flavours.
+AWS has a good selection Linux flavours (Ubuntu, Red Hat, SuSE and Debian) and supports x86_64, aarch64/ARM64 and some wilder architectures. It is free to spin up a t2.nano instance on (for example) aarch64 architecture use that system to compile the exploit. THC also runs a private lab with various other architectures and Unix flavours.
 
 ### Compiling [CVE-2021-4034] for aarch64
 
