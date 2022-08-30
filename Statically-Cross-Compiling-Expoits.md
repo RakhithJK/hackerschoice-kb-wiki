@@ -73,13 +73,13 @@ apk update \
 
 Some exploits can not be compiled statically.
 
-For example: Exploits that compile shared object .so files that need to be loaded by the vulnerable program. It is not possible to cross-compile them either as the .so files heavily depend on the ABI of the target system.
+For example: Exploits that are shared object .so files and which the vulnerable program needs to load during runtime. It is not possible to cross-compile them: The .so files heavily depend on the ABI of the target system.
 
 ### Targeting aarch64
 
-The assumption is that it is not possible to compile the exploit on the target system. Instead we use a system with the same architecture and where the Linux flavour is as close as possible to the target system (a matching libc version often is what matters most).
+The assumption is that it is not possible to compile the exploit on the target system. Instead we use a system with the same architecture and where the Linux flavour is a close match to the target system (a matching libc version often is what matters most).
 
-AWS has a good selection flavours (Ubuntu, Red Hat, SuSE and Debian). It is free to spin up a ARM64 (aarch64) t2.nano instance and compile an exploit. We also have a lab with various other architectures and flavours. That's what we do.
+AWS has a good selection Linux systems (Ubuntu, Red Hat, SuSE and Debian). It is free to spin up a ARM64 (aarch64) t2.nano instance and compile an exploit. THC also runs a private lab with various other architectures and Unix flavours.
 
 ### Compiling [CVE-2021-4034] for aarch64
 
