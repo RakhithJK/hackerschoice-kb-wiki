@@ -53,7 +53,7 @@ All binaries are static binaries. They run on any Linux system regardless of the
 
 Some exploits need additional libraries to compile or have more complex compilation instructions. Let's pick the OpenSSL library as a worst case scenario: A huge and complex library. We use the dirt.c source again even that it does not depend on or need OpenSSL.
 
-Let's get a docker shell and cross-compile for ARM6:
+Let's start an interactive (_-it_) muslcc docker shell, download and compile OpenSSL and then compile the exploit for ARM6:
 
 ```shell
 docker run --rm -v $(pwd):/src -w /src -it muslcc/x86_64:armv6-linux-musleabi
@@ -74,6 +74,8 @@ apk update \
 Some exploits can not be compiled statically.
 
 For example: Exploits that are shared object .so files and which the vulnerable program needs to load during runtime. It is not possible to cross-compile them: The .so files heavily depend on the ABI of the target system.
+
+It's easier to find a system that is similar to the target system and compile there.
 
 ### Targeting aarch64
 
