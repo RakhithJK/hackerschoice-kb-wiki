@@ -14,8 +14,6 @@ Hi, I'm Jiab77 and known as Doctor Who in the [THC Telegram Channel](https://t.m
 
 ![image](https://user-images.githubusercontent.com/9881407/187093682-835a8015-c40b-4598-9c21-7ef311b47e79.png)
 
-> Yes, I'm squating GitHub to store the images :metal:
-
 To open the console, simply hit the `[F12]` key. It should work on every platforms and every browsers. You can also use `[Ctrl + Shift + I]` to open the web console.
 
 ## Best tabs to know
@@ -30,7 +28,7 @@ There are many tabs in the web console. The most useful ones for hacking are:
 
 ### Elements
 
-One of the simpliest thing that you can do with the __Elements__ tab is to reveal the passwors hidden by the dots:
+One of the simplest thing that you can do with the __Elements__ tab is to reveal the passwors hidden by the dots:
 
 * Normal password display
 
@@ -40,7 +38,7 @@ One of the simpliest thing that you can do with the __Elements__ tab is to revea
 
 ![image](https://user-images.githubusercontent.com/9881407/187094363-d70d9b7c-5125-46e0-b51c-c7bd5186051a.png)
 
-But you can do many things as you can edit any elements loaded in your browser. In this case, I just changed the element type from `password` to __`text`__. The result is that the Browser now shows any enter password instead of `*******`! :tada:
+But you can do many things as you can edit any elements loaded in your browser. In this case, I just changed the element type from `password` to __`text`__. The result is that the browser now shows the entered password in clear instead of `*******`! :tada:
 
 ![image](https://user-images.githubusercontent.com/9881407/187094473-acbbf8f7-0bab-49f4-9276-08a4ea0a0365.png)
 
@@ -50,7 +48,7 @@ To revert it as password display, simply set the element type back to `password`
 
 ### Console
 
-To use this one, you'll have to know about Javascript programming. Without it, you'd not be able to do anything in the console tab but if you know it, then you can find some nice things that developpers stores in the global `window` context.
+To use this one, you'll have to know about Javascript programming. Without it, you'd not be able to do anything in the console tab but if you know it, then you can find some nice things that developers stores in the global `window` context.
 
 ![image](https://user-images.githubusercontent.com/9881407/187094602-c2ae280f-635a-46c7-a62c-4d314a781d5d.png)
 
@@ -98,7 +96,7 @@ So yeah, again nothing really juicy here, it's just an example. I'll try to show
 
 ### Network
 
-This one is one of my favorite and I've discovered so many things with it just by observing and learning what data are exchanged on the websites and applications. This allowed me to discover and later exploit many weaknesses.
+This one is one of my favourite and I've discovered so many things with it just by observing and learning what data are exchanged on the websites and applications. This allowed me to discover and later exploit many weaknesses.
 
 Here is a practical example from the website [speedlight.io](https://speedlight.io/my). They will give you a lifetime gold membership if you contact them with this code:
 
@@ -113,7 +111,7 @@ Summary:
 * Access URL: <https://speedlight.io/my>
 * URL that contains the secret code: <https://widget.userpowered.io/init?uuid=[REDACTED]>
 
-Honestly, this one was pretty easy to find but many ones will be in the `Fetch/XHR` sub tab and dynamic websites uses it a lot so finding good stuffs means analyzing a lot of requests... but you can find cool things when you get lucky. I'll show you later so keep reading :wink:
+Honestly, this one was pretty easy to find but many ones will be in the `Fetch/XHR` sub tab and dynamic websites uses it a lot so finding good stuffs means analysing a lot of requests... but you can find cool things when you get lucky. I'll show you later so keep reading :wink:
 
 ### Application
 
@@ -131,7 +129,7 @@ You might have noticed that I've changed the content of the stored data in the _
 
 As I said, I won't go in details about __cookies__ but the cookie stealing technique is basically just noting somewhere the cookie of someone else, get back to your home, go on the same website and change your cookie value by the one you've stollen and you will be logged as the person you've stollen the cookie :sunglasses:
 
-In this case, `speedlight.io` are not using the __cookies__ to store the session tokens, they deciced to use the __Local Storage__ to store them instead.
+In this case, `speedlight.io` are not using the __cookies__ to store the session tokens but __Local Storage__ instead.
 
 ## Concrete use and discoveries
 
@@ -159,7 +157,7 @@ var MENU_EXP=7;
 var MENU_SUPER=10;
 ```
 
-Then I've analyzed the `HTML` source of the user mode selector and found something that could linked to these constants:
+Then I analysed the `HTML` source of the user mode selector and found something that could linked to these constants:
 
 ![image](https://user-images.githubusercontent.com/9881407/187303684-effbda41-bfa9-435b-b61d-0a86f7e9dc5e.png)
 
@@ -183,7 +181,7 @@ So, what do we have here?
 
   ![image](https://user-images.githubusercontent.com/9881407/187304763-acbea7e8-ba17-4258-a01f-7c6ad976610f.png)
 
-  > Yesss, finaly a `Log` tab!!
+  > Yesss, finally a `Log` tab!!
 
 Let's see what we can find in this `Log` tab!
 
@@ -261,7 +259,7 @@ Was it accepted? Yes but it's quite short :cry:
 
 ### stripchat.com
 
-This one will be probably the most interesting for you :stuck_out_tongue_winking_eye: as they clearly don't give a fuck about security or they just don't know how to put it in place correctly or whatever but their weakness are quite obsvious and [easy](https://github.com/DgSe95/porn-proxyfy) to [exploit](https://github.com/DgSe95/porn-dump-cli).
+This one will be probably the most interesting for you :stuck_out_tongue_winking_eye: as they clearly don't give a fuck about security or they just don't know how to put it in place correctly or whatever but their weakness are quite obvious and [easy](https://github.com/DgSe95/porn-proxyfy) to [exploit](https://github.com/DgSe95/porn-dump-cli).
 
 #### Connected models
 
@@ -376,7 +374,7 @@ It's very simple:
 
 ## Thanks
 
-Please share your thougths in the [Telegram Channel](https://t.me/thcorg) :stuck_out_tongue_closed_eyes:
+Please share your thoughts in the [Telegram Channel](https://t.me/thcorg) :stuck_out_tongue_closed_eyes:
 
 ## Research
 
