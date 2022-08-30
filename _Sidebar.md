@@ -1,2 +1,0 @@
-FooBar
-test
