@@ -4,4 +4,4 @@ Welcome to the kb wiki!
 
 A detailed article where you'll find some practical uses of the Web Console in the Hacking domain.
 
-[View more](Web-Console.md)
+[View more](Web-Console)
