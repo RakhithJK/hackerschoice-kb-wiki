@@ -87,7 +87,7 @@ AWS has a good selection Linux flavours (Ubuntu, Red Hat, SuSE and Debian) and s
 
 A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles additional .c files during runtime _and_ the vulnerable program needs to load the newly compiled .so file.
 
-There are better exploits but the reference exploit [cve-2021-4043-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect for what we like to showcase.
+There are better exploits but the reference exploit [cve-2021-4034-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect for what we like to showcase.
 
 We need to modify the original exploit in two ways:
 1. Split it into two separate .c files.
