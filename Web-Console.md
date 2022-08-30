@@ -366,7 +366,7 @@ It's very simple:
 
 1. Create a new issue in any project (_no need to submit it_)
 2. Make a screenshot of the image you like to upload. This will load the image into memory.
-3. Paste it in the `textarea` field of the new issue, it will store it and convert it in URL:
+3. Paste it in the `textarea` field of the new issue. GitHub will convert and store the image at a permanent URL:
 
     ![image](https://user-images.githubusercontent.com/9881407/187099344-330a0413-a8df-4c9a-b501-a5eaf578a215.png)
 
