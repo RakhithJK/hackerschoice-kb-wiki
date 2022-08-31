@@ -158,7 +158,7 @@ If you are still there, thanks a lot for your patience. :bow:
 
 I'll now show you some concrete examples from some discoveries I've made on my side:
 
-### hidden features in router interface of a Swiss internet provider
+### hidden features in router interface
 
 Initially, I just wanted to access to my router logs because as every routers that runs on Linux, they must have logs, right?! But I searched everywhere inside that damn router and could not find anything regarding the logs and after some digging and analysis of the `JS` files of the interface, I found one that has some interesting constants:
 
