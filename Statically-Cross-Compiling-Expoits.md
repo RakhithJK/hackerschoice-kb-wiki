@@ -75,7 +75,7 @@ apk update \
 && gcc -I/src/usr/include -L/src/usr/lib -pthread dirty.c -o dirty-exp -lcrypt -lcrypto -lssl -static
 ```
 
-## Exploits that need .so files
+## Exploits that can not be static
 
 Some exploits can not be compiled statically.
 
@@ -83,13 +83,34 @@ For example: Exploits that are shared object .so files and which the vulnerable 
 
 The ABI is the reason why you can not just execute a (dynamic) binary from a libmusl system on a libc system or vice versa.
 
-It's easier to find a system that is similar to the target system and compile there.
-
 ### Targeting aarch64
 
 The assumption is that it is not possible to compile the exploit on the target system. Instead we use a system with the same architecture and where the Linux flavour is a close match to the target system (a matching libc version often is what matters most).
 
-AWS has a good selection Linux flavours (Ubuntu, Red Hat, SuSE and Debian) and supports x86_64, aarch64/ARM64 and some wilder architectures. It is free to spin up a t2.nano instance on (for example) aarch64 architecture use that system to compile the exploit. THC also runs a private lab with various other architectures and Unix flavours.
+AWS has a good selection of Linux flavours (Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. For example we may use a t2.nano instance (free) on aarch64 architecture that runs Ubuntu to compile an exploit (for a target that runs Ubuntu on aarch64).
+
+Sometimes it's important that the exact OS version matches. In this case we pick the same architecture and _any_ Linux OS and then use Docker on that system to run the correct OS to compile our exploit.
+
+For example we may want to compile and test an exploit for Centos7 for aarch64. We would spin up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
+```console
+[root@ip-172-22-17-199 ~]# uname -m    # AWS Instance running Ubuntu on aarch64
+aarch64
+[root@ip-172-22-17-199 ~]# docker run --rm -v $(pwd):/src -it centos:centos7
+Unable to find image 'centos:centos7' locally
+centos7: Pulling from library/centos
+Digest: sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407
+Status: Downloaded newer image for centos:centos7
+[root@2296b2d72191 /]# yum group install "Development Tools"
+...
+[root@2296b2d72191 /]# gcc --version
+gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44)
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[root@2296b2d72191 /]#
+```
+
+THC also runs a private lab for some exotic architectures and Unix flavours.
 
 ### Compiling [CVE-2021-4034] for aarch64
 
