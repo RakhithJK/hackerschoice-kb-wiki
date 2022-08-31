@@ -13,7 +13,11 @@ The musl libc is a C standard library just like GNU's libc. It's smaller, cleane
 
 The fine folks at https://musl.cc/ maintain cross-compiler toolchains against libmusl for many different architectures.
 
-These toolchains can be used to generate a (static) Linux binary for a different architecture than the architecture used for compiling the exploit (x86_64):
+These toolchains can be used to generate a (static) Linux binary for a different architecture (e.g. arm6v or aarch64) than the architecture used for compiling the exploit (x86_64).
+
+Additionally they have docker images: This allows us to compile binaries for different Operating Systems than our own Operating System (OS).
+
+Summary: Docker + muslcc is architecture _and_ OS agnostic.
 
 Firstly, there is a bug in the reference exploit. Let's fix this first:
 ```shell
