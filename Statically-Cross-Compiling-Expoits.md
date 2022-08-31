@@ -89,9 +89,9 @@ The assumption is that it is not possible to compile the exploit on the target s
 
 AWS has a good selection of Linux flavours (Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. For example we may use a t2.nano instance (free) on aarch64 architecture that runs Ubuntu to compile an exploit (for a target that runs Ubuntu on aarch64).
 
-Sometimes it's important that the exact OS version matches. In this case we pick the same architecture and _any_ Linux OS and then use Docker on that system to run the correct OS to compile our exploit.
+Sometimes it's required that the OS version for compiling the exploit is an exact match to the target OS & architecture. In this case we Ubuntu OS on the same architecture as the target and then use Docker to run the target's OS inside Ubuntu.
 
-For example we may want to compile and test an exploit for Centos7 for aarch64. We would spin up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
+For example we may want to compile and test an exploit for Centos7 on aarch64. We would spin up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
 ```console
 [root@ip-172-22-17-199 ~]# uname -m    # AWS Instance running Ubuntu on aarch64
 aarch64
@@ -113,6 +113,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 THC also runs a private lab for some exotic architectures and Unix flavours.
 
 ### Compiling [CVE-2021-4034] for aarch64
+
+Back to our example for an exploit that can not be compiled staticallly:
 
 A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles additional .c files during runtime _and_ the vulnerable program needs to load the newly compiled .so file.
 
