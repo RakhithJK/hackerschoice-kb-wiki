@@ -83,15 +83,17 @@ For example: Exploits that are shared object .so files and which the vulnerable 
 
 The ABI is the reason why you can not just execute a (dynamic) binary from a libmusl system on a libc system or vice versa.
 
-### Targeting aarch64
+### Use AWS to pick the matching architecture
 
 The assumption is that it is not possible to compile the exploit on the target system. Instead we use a system with the same architecture and where the Linux flavour is a close match to the target system (a matching libc version often is what matters most).
 
 AWS has a good selection of Linux flavours (Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. For example we may use a t2.nano instance (free) on aarch64 architecture that runs Ubuntu to compile an exploit (for a target that runs Ubuntu on aarch64).
 
-Sometimes it's required that the OS version for compiling the exploit is an exact match to the target OS & architecture. In this case we Ubuntu OS on the same architecture as the target and then use Docker to run the target's OS inside Ubuntu.
+### Use Docker to pick the matching OS
 
-For example we may want to compile and test an exploit for Centos7 on aarch64. We would spin up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
+Sometimes it's required that the OS version used for compiling the exploit is an exact match to the target OS & architecture. In this case we run Ubuntu OS on the same architecture as the target and then use Docker to run the target's OS inside Ubuntu.
+
+For example we may want to compile and test an exploit for Centos7 on aarch64. We can do this by spinning up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
 ```console
 [root@ip-172-22-17-199 ~]# uname -m    # AWS Instance running Ubuntu on aarch64
 aarch64
