@@ -167,3 +167,9 @@ uid=0(root) gid=0(root) groups=0(root)
 #
 ```
 
+## Closing Notes
+
+We also use VirtualBox. VirtualBox can be used to compile for different OSes but only for x86_64 or i386.
+
+We do not use QEMU for compiling exploits. Rumours are that others do and here are some easy to follow [instructions for QEMU](https://futurewei-cloud.github.io/ARM-Datacenter/qemu/how-to-launch-aarch64-vm/). 
+
