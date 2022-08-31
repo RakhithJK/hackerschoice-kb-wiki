@@ -376,13 +376,6 @@ It's very simple:
 
 Please share your thoughts in the [Telegram Channel](https://t.me/thcorg) :stuck_out_tongue_closed_eyes:
 
-## Research
-
-If you are curious and want to see more about what I discovered, you can find more details here:
-
-* <https://gist.github.com/Jiab77/6c38f6566d68784f4591b60c0269a8f0>
-* <https://github.com/DgSe95/stream-capture-poc>
-
 ## References
 
 * <https://developer.mozilla.org/en-US/docs/Web/API/console>
@@ -391,9 +384,3 @@ If you are curious and want to see more about what I discovered, you can find mo
 * <https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API>
 * <https://feross.org/fill-disk/>
 * <https://github.com/staaldraad/turner>
-
-## Author
-
-* On Telegram: Doctor Who
-* On Twitter: Jiab77
-* Sometimes...:smiling_imp:: DgS95
