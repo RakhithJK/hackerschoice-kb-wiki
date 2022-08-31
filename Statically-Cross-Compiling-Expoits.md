@@ -9,7 +9,9 @@ The vulnerability is a local privilege escalation in Linux Kernel <4.8.3.
 
 ## Using muslcc toolchain
 
-The fine folks at https://musl.cc/ maintain cross-compiler toolchains for many different architectures.
+The musl libc is a C standard library just like GNU's libc. It's smaller, cleaner and easier to handle.
+
+The fine folks at https://musl.cc/ maintain cross-compiler toolchains against libmusl for many different architectures.
 
 These toolchains can be used to generate a (static) Linux binary for a different architecture than the architecture used for compiling the exploit (x86_64):
 
@@ -73,7 +75,9 @@ apk update \
 
 Some exploits can not be compiled statically.
 
-For example: Exploits that are shared object .so files and which the vulnerable program needs to load during runtime. It is not possible to cross-compile them: The .so files heavily depend on the ABI of the target system.
+For example: Exploits that are shared object .so files and which the vulnerable program needs to load during runtime. It is not possible to cross-compile them: The .so files heavily depend on the Application Binary Interface (ABI) of the target system.
+
+The ABI is the reason why you can not just execute a (dynamic) binary from a libmusl system on a libc system or vice versa.
 
 It's easier to find a system that is similar to the target system and compile there.
 
