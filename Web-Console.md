@@ -82,6 +82,27 @@ window.alert('THC is the best hacking group!!');
 
 It's just a basic example but if the website or the application is not protected against code injection with a `CSP` (_Content Security Policy_), you can basically inject everything you want, modify any elements in the page and so on.
 
+#### Color differences
+
+Someone in the group asked me what was the differences between the two colors:
+
+![image](https://user-images.githubusercontent.com/9881407/187750390-2fdf1fd2-d344-409d-a121-37c213947cbd.png)
+
+Long story short:
+
+* Light blue ones - Those that you can modify / alter. (_dynamic_)
+* Darker blue ones - Those that you __can't__ modify / alter. (_static_)
+
+In detail:
+
+* Light blue ones:
+
+> TODO
+
+* Darker blue ones:
+
+> TODO
+
 ### Sources
 
 This one might sounds not really interesting but again you might be surprised by what some developers can leave in clear in their source files so don't hesitate to waste some hours digging into them, you might find some golden nuggets :wink:
