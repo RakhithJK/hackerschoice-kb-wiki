@@ -2,7 +2,7 @@
 List of Articles
 </h1>
 
-2022-09-02 [Analysing an info stealer](Analysing-an-info-stealer) - _by F_ederico1_
+2022-09-02 [Analysing Windows Malware](Analysing-an-info-stealer) - _by F_ederico1_  
 2022-09-01 [Static Cross Compiling Exploits](Statically-Cross-Compiling-Expoits) - _by skyper_  
 2022-08-30 [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_  
 
