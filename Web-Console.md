@@ -119,11 +119,11 @@ In detail:
 
   You can call them in your web projects but keep in mind that some of them are not standardized so if you're using them, your code will be specific for the targetted browser only.
 
-> As I said in the beginning, the implementation may vary. For example, this is how Firefox is showing the difference:
->
-> ![image](https://user-images.githubusercontent.com/9881407/187807532-9d7ace5e-c50a-476e-84c7-854a1438047e.png)
->
-> You'll have expand `<default properties>` to see them.
+As I said in the beginning, the implementation may vary. For example, this is how Firefox is showing the difference:
+
+![image](https://user-images.githubusercontent.com/9881407/187807532-9d7ace5e-c50a-476e-84c7-854a1438047e.png)
+
+You'll have expand `<default properties>` to see them.
 
 ### Sources
 
