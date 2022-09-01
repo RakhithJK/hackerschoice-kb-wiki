@@ -421,8 +421,8 @@ Please share your thoughts in the [Telegram Channel](https://t.me/thcorg) :stuck
 
 ## References
 
-* <https://developer.mozilla.org/en-US/docs/Web/API/console>
 * <https://developers.google.com/web/tools/chrome-devtools/console/console-reference>
+* <https://developer.mozilla.org/en-US/docs/Web/API/console>
 * <https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API>
 * <https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API>
 * <https://feross.org/fill-disk/>
