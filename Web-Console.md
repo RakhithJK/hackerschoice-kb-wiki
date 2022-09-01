@@ -16,6 +16,10 @@ Hi, I'm Jiab77 and known as Doctor Who in the [THC Telegram Channel](https://t.m
 
 To open the console, simply hit the `[F12]` key. It should work on every platforms and every browsers. You can also use `[Ctrl + Shift + I]` to open the web console.
 
+> Even if all modern browsers have a web console, it implementation may vary. So depending on what you are using, you might see some differences.
+>
+> In this article, I've used Chromium.
+
 ## Best tabs to know
 
 There are many tabs in the web console. The most useful ones for hacking are:
@@ -25,6 +29,12 @@ There are many tabs in the web console. The most useful ones for hacking are:
 * __Sources__ - Shows the source files of websites and applications
 * __Network__ - Shows all the requests made by the websites and applications
 * __Application__ - Shows all data stored by the websites and applications in the browser
+
+> Some names are different in Firefox:
+>
+> * _Elements_ -> __Inspector__
+> * _Sources_ -> __Debugger__
+> * _Application_ -> __Storage__
 
 ### Elements
 
@@ -56,12 +66,6 @@ Simply type `window` then hit enter and expand the displayed object properties.
 
 Here you can see few things that comes from the developer of the website I'm using for the screenshots, these are not part of the default `window` object content:
 
-<!--
-![image](https://user-images.githubusercontent.com/9881407/187094716-10835c22-87a5-4b26-b303-176fa6c794ec.png)
-
-In the picture you can see the `getWidget`, `getXHR` and the property `i` that are part of the code stored in the global context.
--->
-
 ![image](https://user-images.githubusercontent.com/9881407/187095191-aa3b0265-85b3-46bc-87eb-ef7063b32ad2.png)
 
 In the picture you can see the `__meteor_runtime_config__` object that contains some interesting things, for example some details about the Sentry tool used to diagnose issues in the code:
@@ -88,6 +92,8 @@ Someone in the group asked me what was the differences between the two colors:
 
 ![image](https://user-images.githubusercontent.com/9881407/187750390-2fdf1fd2-d344-409d-a121-37c213947cbd.png)
 
+> Example from Chromium
+
 Long story short:
 
 * Light blue ones - Those that you can modify / alter. (_dynamic_)
@@ -97,11 +103,27 @@ In detail:
 
 * Light blue ones:
 
-> TODO
+  Every global and third party code will appear that way:
+
+  ```js
+  window.thc = 'best hacking group';
+  ```
+
+  Will appear like that:
+
+  ![image](https://user-images.githubusercontent.com/9881407/187806560-0bee8eee-cddf-4944-955a-3518ef3776b2.png)
 
 * Darker blue ones:
 
-> TODO
+  As said in the short answer, these are static objects, methods and properties that comes with your browser whatever it can be.
+
+  You can call them in your web projects but keep in mind that some of them are not standardized so if you're using them, your code will be specific for the targetted browser only.
+
+> As I said in the beginning, the implementation may vary. For example, this is how Firefox is showing the difference:
+>
+> ![image](https://user-images.githubusercontent.com/9881407/187807532-9d7ace5e-c50a-476e-84c7-854a1438047e.png)
+>
+> You'll have expand `<default properties>` to see them.
 
 ### Sources
 
