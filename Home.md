@@ -4,7 +4,7 @@ List of Articles
 
 2022-09-01 [Static Cross Compiling Exploits](Statically-Cross-Compiling-Expoits) - _by skyper_  
 2022-08-30 [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_  
-2022-09-01 [Analysing an info stealer] - _by F_ederico1_
+2022-09-01 [Analysing an info stealer](Analysing-an-info-stealer) - _by F_ederico1_
 
 ***
 
