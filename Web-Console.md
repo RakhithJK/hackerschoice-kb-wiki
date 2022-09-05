@@ -1,12 +1,13 @@
 <!-- No need top header for a wiki -->
 
-<center>
-  <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg" alt="web-console_640x426">-->
-  <!--<img src="https://user-images.githubusercontent.com/9881407/188516084-293a85b6-6f2f-4c31-ba87-fcbae7505971.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg">-->
-  <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_1920x1280.jpg" alt="web-console_1920x1280" align="middle">-->
-  <img src="https://user-images.githubusercontent.com/9881407/188515988-ac039db5-6690-4d10-be97-d2d6054a209a.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_1920x1280.jpg" align="middle">
+<div style="text-align: center;">
+  <p>
+  <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg" alt="web-console_640x426" title="Code sample in Web Console">-->
+  <!--<img src="https://user-images.githubusercontent.com/9881407/188516084-293a85b6-6f2f-4c31-ba87-fcbae7505971.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg" title="Code sample in Web Console">-->
+  <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_1920x1280.jpg" alt="web-console_1920x1280" align="middle" title="Code sample in Web Console">-->
+  <img src="https://user-images.githubusercontent.com/9881407/188515988-ac039db5-6690-4d10-be97-d2d6054a209a.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_1920x1280.jpg" align="middle" title="Code sample in Web Console"></p>
   <p>Your Web-Browser has a powerful console which can be used for hacking. I'll show you some examples of things I find interesting to do with it.</p>
-</center>
+</div>
 
 ## TL;DR
 
