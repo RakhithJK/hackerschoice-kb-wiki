@@ -1,6 +1,12 @@
-# Cool things you can do with just the web console
+<!-- No need top header for a wiki -->
 
-Your Web-Browser has a powerful console which can be used for hacking. I'll show you some examples of things I find interesting to do with it.
+<center>
+  <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg" alt="web-console_640x426">-->
+  <!--<img src="https://user-images.githubusercontent.com/9881407/188516084-293a85b6-6f2f-4c31-ba87-fcbae7505971.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg">-->
+  <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_1920x1280.jpg" alt="web-console_1920x1280" align="middle">-->
+  <img src="https://user-images.githubusercontent.com/9881407/188515988-ac039db5-6690-4d10-be97-d2d6054a209a.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_1920x1280.jpg" align="middle">
+  <p>Your Web-Browser has a powerful console which can be used for hacking. I'll show you some examples of things I find interesting to do with it.</p>
+</center>
 
 ## TL;DR
 
@@ -180,7 +186,7 @@ If you are still there, thanks a lot for your patience. :bow:
 
 I'll now show you some concrete examples from some discoveries I've made on my side:
 
-### hidden features in router interface
+### Display hidden features from the web interface of my router
 
 Initially, I just wanted to access to my router logs because as every routers that runs on Linux, they must have logs, right?! But I searched everywhere inside that damn router and could not find anything regarding the logs and after some digging and analysis of the `JS` files of the interface, I found one that has some interesting constants:
 
@@ -240,9 +246,7 @@ Damn it... :expressionless:
 
 > Long story short, I must configure my local network connection to be in the right `VLAN` to be able to display the hidden content... It sucks :sweat_smile:
 
-Anyway, a side of this simple thing, it was one of my biggest discoveries in terms of possible impact as I haven't just found that but many other things that I won't detail here.
-
-### tunein.com
+### Hacking web radios
 
 What I'll show here is mostly valid for any web radios whatever they ask you to pay something each months to get it or not:
 
@@ -271,38 +275,19 @@ And enjoy the direct streaming URL that you can later play in __VLC__ for exampl
 
 Basically, most streaming servers based on `shoutcast` or `icecast` does not support the `HTTPS` protocol so they are using `HTTP` only most of the time...
 
-### secondlife.com
+### Steal session cookies
 
 ![image](https://user-images.githubusercontent.com/9881407/187096450-458fd154-8087-48ae-9784-a9067c48cccd.png)
 
-If you can get your hands on the `session-token` of a Second Life user, just connect on the [website](https://secondlife.com/my/index.php), replace the generated `session-token` by the one you could catch and reload the page, you'll be logged in.
+If you can get your hands on the `session-token` (_or any similar names_) of someone else, just connect on the same website, replace the generated `session-token` by the one you could catch and reload the page, you'll be logged in.
 
-Basically, if the user as not logged off, the `session-token` will be valid for around 15 days until it gets revoked.
+Basically, if the user as not logged off, the `session-token` will be valid for a various range of days depending on the website until it gets revoked.
 
-Another weakness I can tell for those who likes to crack passwords:
+### Abusing adult streaming websites
 
-* Max password size: 16 chars
-* Limited amount of special chars supported
+This one will be probably the most interesting for you as they clearly don't give a fuck about security or they just don't know how to put it in place correctly or whatever but their weakness are quite obvious and [easy](https://github.com/DgSe95/porn-proxyfy) to [exploit](https://github.com/DgSe95/porn-dump-cli).
 
-I've pasted this:
-
-```
-{÷=.3y};_lo:(7l{yy<Fz2n((lK.>ÌF+"7¥:±a65]@w¹à@~}&[nI)55(Vl{)zU"{14O£5`7A[NJ`6F}6>{n^Vlâ!J6dSÆg<W83*I}"Õ6bo=àÇO<>6m1bA2wV3êl[ÕOg6
-```
-
-And only this was stored in the password field:
-
-```
-{÷=.3y};_lo:(7l{
-```
-
-Was it accepted? Yes but it's quite short :cry:
-
-> Don't try to pass `ANSI` chars they won't be accepted :laughing:
-
-### stripchat.com
-
-This one will be probably the most interesting for you :stuck_out_tongue_winking_eye: as they clearly don't give a fuck about security or they just don't know how to put it in place correctly or whatever but their weakness are quite obvious and [easy](https://github.com/DgSe95/porn-proxyfy) to [exploit](https://github.com/DgSe95/porn-dump-cli).
+> The following will be related to _stripchat_ but it's also valid for every similar websites that use the `HLS` streaming format or have a `WebRTC` based service as both are often misconfigured.
 
 #### Connected models
 
@@ -317,7 +302,7 @@ This one will be probably the most interesting for you :stuck_out_tongue_winking
 * To:
   * <https://stripchat.com/api/front/v2/models?limit=10000>
 
-Now enjoy :grin:, you have the details about the `4512` connected models at that time :rofl:
+Now enjoy, you have the details about all the connected models at that time :smiling_imp:
 
 #### WebRTC servers credentials
 
@@ -367,7 +352,7 @@ Here the interesting URL is:
 
 This is the direct stream URL of the model that you can play in __VLC__ or `ffplay` but not just that, you can also record it and/or restream it with `ffmpeg`.
 
-```
+```console
 $ ffplay -hide_banner "https://b-hls-19.doppiocdn.com/hls/17085196/master/17085196_auto.m3u8"
 [hls @ 0x7fb624000bc0] Skip ('#EXT-X-VERSION:6')B sq=    0B f=0/0   
 [hls @ 0x7fb624000bc0] Opening 'https://b-hls-16.doppiocdn.com/hls/17085196/17085196_160p.m3u8' for reading
@@ -411,13 +396,13 @@ It's very simple:
 
     ![image](https://user-images.githubusercontent.com/9881407/187099344-330a0413-a8df-4c9a-b501-a5eaf578a215.png)
 
-4. Copy the generated URL and paste it wherever you want :wink:
+4. Copy the generated URL and paste it wherever you want
 
 > It's in the `markdown` format but you can easily extract the URL between the `()` to get the direct picture link only.
 
 ## Thanks
 
-Please share your thoughts in the [Telegram Channel](https://t.me/thcorg) :stuck_out_tongue_closed_eyes:
+Thanks for reading. Please share your thoughts in the [Telegram Channel](https://t.me/thcorg).
 
 ## References
 
