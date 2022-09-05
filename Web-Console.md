@@ -1,6 +1,6 @@
 <!-- No need top header for a wiki -->
 
-<div style="text-align: center;">
+<div align="center">
   <p>
   <!--<img src="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg" alt="web-console_640x426" title="Code sample in Web Console">-->
   <!--<img src="https://user-images.githubusercontent.com/9881407/188516084-293a85b6-6f2f-4c31-ba87-fcbae7505971.jpg" alt="pankaj-patel-u2Ru4QBXA5Q-unsplash_640x426.jpg" title="Code sample in Web Console">-->
