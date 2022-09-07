@@ -3,7 +3,7 @@ List of Knowledge
 </h1>
 
 1. [Analysing Windows Malware](Analysing-Windows-Malware) - _by F_ederico1_  
-1. [Static Cross Compiling Exploits](Statically-Cross-Compiling-Expoits) - _by skyper_  
+1. [Cross Compiling Exploits](Cross-Compiling-Exploits) - _by skyper_  
 1. [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_  
 
 ***
