@@ -9,6 +9,8 @@ The vulnerability is a local privilege escalation in Linux Kernel <4.8.3.
 
 # Static Compiling
 
+The standard `GNU libc` not suitable to compile static binaries. Instead we use `MUSL libc` and the muslcc toolchain.
+
 ## Using muslcc toolchain
 
 The musl libc is a C standard library just like GNU's libc. It's smaller, cleaner and easier to handle.
@@ -19,7 +21,7 @@ These toolchains can be used to generate a (static) Linux binary for a different
 
 Additionally they have docker images: This allows us to compile binaries for different Operating Systems than our own Operating System (OS).
 
-Summary: Docker + muslcc is architecture _and_ OS agnostic.
+This works well for exploits that can be compiled statically. 
 
 Firstly, there is a bug in the reference exploit. Let's fix this first:
 ```shell
@@ -89,31 +91,29 @@ The ABI is the reason why you can not just execute a (dynamic) binary from a lib
 
 These exploits need to be compiled on the matching OS with matching architecture. In our example we try to compile an exploit that needs a shared library (and thus can not be statically compiled) for aarch64 (aka arm64v8) to run on Amazon Linux 2 (which is based on Centos7 OS). 
 
-
 There are a few methods to pick from:
 1. Use an Amazon Linux 2/aarch64 instance.
 1. Find a server of the same architecture and use Docker to run Centos7.
 1. Use QEMU and Docker to run any OS of any architecture.
 
+Either of the methods will work but only if the target is running Linux.
+
 ### Method 1 - Using Amazon Linux 2/aarch64
 
-AWS has a good selection of Linux flavours (Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. It is free to run a t2.nano on aarch64 and running Amazon Linux 2.
+AWS has a good selection of Linux flavours (Amazon Linux, Ubuntu, Red Hat, SuSE and Debian) that can run on either x86_64 or aarch64/ARM64 architecture. Mostly we run a t2.nano on the matching architecture and a matching OS to compile exploits. It's the easiest and most straightforward.
 
 ### Method 2 - Use any aarch64 with Docker running Centos7
 
-Let's assume Method 1 is not available.
-
-Pick any server that runs on aarch64. Start a Docker image matching the target's OS. In this example I'm on a aarch64 server running Debian but my exploit needs to be compiled for Centos (Amazon Linux 2) also on aarch64.
+Pick any server that runs on aarch64. Start a Docker image matching the target's OS. In this example I'm on a aarch64 server running Debian but my exploit needs to be compiled for Amazon Linux 2 (aka Centos7). Both, my architecture and the target's architecture, are aarch64.
 
 ```console
 $ uname -m
 aarch64
-$ docker run --rm -v $(pwd):/src -it centos:centos7
-[root@9409baa1861a /]# 
+$ docker run --rm -v $(pwd):/src -w /src -it centos:centos7
+[root@9409baa1861a src]# 
 ```
 
 ### Method 3 - QEMU and Docker
-
 
 Docker can run images for [different architecture](https://github.com/multiarch/qemu-user-static). The execution is emulated by QEMU. The details are not noticeable to the user and 'docker just does it all for you'.
 
