@@ -144,11 +144,9 @@ $
 
 [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) (aka polkit/pkexec) is an exploit that can not be compiled statically. The exploit tricks the vulnerable program to load a dynamically shared object (.so file) during runtime. A dynamically shared object can never be static.
 
-Any of the 3 methods above work. Our target is Amazon Linux 2 AMI on aarch64. The closest OS that's available on Docker is Centos7.
-
 ## Preparing the exploit
 
-The [Proof-of-Concept exploit](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) for CVE-2021-4034 needs to be modified slightly. At the moment the exploit executes gcc to compile the shared object during exploit execution. Our assumption is that gcc is not available on the target platform. 
+The [Proof-of-Concept exploit](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) for CVE-2021-4034 needs to be modified slightly. At the moment the exploit executes gcc during exploit execution to compile the shared object on the target. Our assumption is that gcc is not available on the target platform. 
 
 We need to modify the original exploit in two ways:
 1. Split it into two separate .c files.
@@ -199,7 +197,6 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 [root@0a0888cd5ea7 src]#
 ```
 
-
 Compile both source files:
 ```shell
 gcc pwnkit.c -o pwnkit.so -shared -fPIC
@@ -216,7 +213,7 @@ uid=0(root) gid=0(root) groups=0(root)
 
 ## Closing Notes
 
-We also use VirtualBox. VirtualBox can be used to compile for different OSes but only for x86_64 or i386.
+So what if the target is not Linux? We use VirtualBox and we also run a private research lab with different architetures.
 
 QEMU can be used for [much more](https://futurewei-cloud.github.io/ARM-Datacenter/qemu/how-to-launch-aarch64-vm/). 
 
