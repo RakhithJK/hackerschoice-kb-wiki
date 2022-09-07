@@ -115,7 +115,7 @@ $ docker run --rm -v $(pwd):/src -w /src -it centos:centos7
 
 ### Method 3 - QEMU and Docker
 
-Docker can run images for [different architecture](https://github.com/multiarch/qemu-user-static). The execution is emulated by QEMU. The details are not noticeable to the user and 'docker just does it all for you'.
+Docker can run images for [different architecture](https://github.com/multiarch/qemu-user-static). The execution is emulated by QEMU. The details are not noticeable to the user and 'docker just does it all for you'. Just to list a few: aarch64, arm, ppc64, m68k, sparc64, mips, alpha, ...
 
 Firstly let's prepare Docker to run images of different architectures:
 ```console
