@@ -1,10 +1,10 @@
 <h1 align="center">
-List of Articles
+List of Knowledge
 </h1>
 
-2022-09-02 [Analysing Windows Malware](Analysing-Windows-Malware) - _by F_ederico1_  
-2022-09-01 [Static Cross Compiling Exploits](Statically-Cross-Compiling-Expoits) - _by skyper_  
-2022-08-30 [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_  
+1. [Analysing Windows Malware](Analysing-Windows-Malware) - _by F_ederico1_  
+1. [Static Cross Compiling Exploits](Statically-Cross-Compiling-Expoits) - _by skyper_  
+1. [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_  
 
 ***
 
