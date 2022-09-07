@@ -115,7 +115,7 @@ $ docker run --rm -v $(pwd):/src -it centos:centos7
 ### Method 3 - QEMU and Docker
 
 
-Docker can run images for [https://github.com/multiarch/qemu-user-static](different architectures). The execution is emulated by QEMU. The details are not noticeable to the user and 'docker just does it all for you'.
+Docker can run images for [different architecture](https://github.com/multiarch/qemu-user-static). The execution is emulated by QEMU. The details are not noticeable to the user and 'docker just does it all for you'.
 
 Firstly let's prepare Docker to run images of different architectures:
 ```console
@@ -131,7 +131,7 @@ $ docker run --rm -it arm64v8/centos
 aarch64
 ```
 
-All started binaries are automatically started via qemu. Let's check the host system:
+The executed binaries are automatically started via qemu. Let's check the host system:
 ```console
 $ docker run --rm -t arm64v8/centos sleep 1337 &
 [1] 4042135
@@ -140,24 +140,15 @@ $ ps axw | grep qemu
 $ 
 ```
 
-We can use this image to compile our exploit (see below). We picked a distribution (Centos7 in this case) that is close to our target system. Amazon Linux 2 AMI is based on Centos.  
+# Compiling [CVE-2021-4034] for Centos7/aarch64
 
+[CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) (aka polkit/pkexec) is an exploit that can not be compiled statically. The exploit tricks the vulnerable program to load a dynamically shared object (.so file) during runtime. A dynamically shared object can never be static.
 
-# Compiling an exploit
-
-# Compiling [CVE-2021-4034] for aarch64
-
-Any of the 3 methods above work.
-
+Any of the 3 methods above work. Our target is Amazon Linux 2 AMI on aarch64. The closest OS that's available on Docker is Centos7.
 
 ## Preparing the exploit
 
-
-Back to our example for an exploit that can not be compiled statically:
-
-A good example is [CVE-2021-4034](https://github.com/arthepsy/CVE-2021-4034/) also known as polkit/pkexec exploit. The exploit compiles additional .c files during runtime _and_ the vulnerable program needs to load the newly compiled .so file.
-
-There are better exploits but the reference exploit [cve-2021-4034-poc.c](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) is just perfect for what we like to showcase.
+The [Proof-of-Concept exploit](https://github.com/arthepsy/CVE-2021-4034/blob/main/cve-2021-4034-poc.c) for CVE-2021-4034 needs to be modified slightly. At the moment the exploit executes gcc to compile the shared object during exploit execution. Our assumption is that gcc is not available on the target platform. 
 
 We need to modify the original exploit in two ways:
 1. Split it into two separate .c files.
@@ -190,26 +181,23 @@ void gconv_init() {
 }
 ```
 
-For example we may want to compile and test an exploit for Centos7 on aarch64. We can do this by spinning up an AWS aarch64 instance on Ubuntu, install Docker and run Centos7:
+## Compiling
+
+Any of the 3 methods discussed earlier can be used to compile the exploit. In this example I use QEMU & Docker:
+
 ```console
-[root@ip-172-22-17-199 ~]# uname -m    # AWS Instance running Ubuntu on aarch64
+$ docker run --rm -v $(pwd):/src -w /src -it arm64v8/centos
+[root@0a0888cd5ea7 src]# uname -m
 aarch64
-[root@ip-172-22-17-199 ~]# docker run --rm -v $(pwd):/src -it centos:centos7
-Unable to find image 'centos:centos7' locally
-centos7: Pulling from library/centos
-Digest: sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407
-Status: Downloaded newer image for centos:centos7
-[root@2296b2d72191 /]# yum group install "Development Tools"
+[root@0a0888cd5ea7 src]# yum group install "Development Tools"
 ...
-[root@2296b2d72191 /]# gcc --version
+[root@0a0888cd5ea7 src]# gcc --version
 gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44)
 Copyright (C) 2015 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-[root@2296b2d72191 /]#
+[root@0a0888cd5ea7 src]#
 ```
-
-
 
 
 Compile both source files:
@@ -230,5 +218,5 @@ uid=0(root) gid=0(root) groups=0(root)
 
 We also use VirtualBox. VirtualBox can be used to compile for different OSes but only for x86_64 or i386.
 
-We do not use QEMU for compiling exploits. Rumours are that others do and here are some easy to follow [instructions for QEMU](https://futurewei-cloud.github.io/ARM-Datacenter/qemu/how-to-launch-aarch64-vm/). 
+QEMU can be used for [much more](https://futurewei-cloud.github.io/ARM-Datacenter/qemu/how-to-launch-aarch64-vm/). 
 
