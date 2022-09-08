@@ -2,12 +2,12 @@
 
 <h2>0x00 Preface</h2>
 
-Having started my journey w/ Linux and SDR in 2012, back then I had to manually compile lots of stuff, sometimes including a dependency hell. Still, there was already alot going on - a growing codebase from the [GNU Radio project](https://en.wikipedia.org/wiki/GNU_Radio) combined w/ [OsmoCom](https://osmocom.org/) code and a cheap DVB-T receiver already opened up a whole world of possibilities. I later on bought a [HackRF One](https://en.wikipedia.org/wiki/HackRF_One) and there also was the [rad1o badge](https://rad1o.badge.events.ccc.de/) from the german hacker camp in 2015, offering a even broader frequency range up to 4 or 6 GHz as well as transceiver capabilities.
+Having started my journey w/ Linux and SDR in 2012, back then I had to manually compile lots of stuff, sometimes including a dependency hell. Still, there was already alot going on - a growing codebase from the [GNU Radio project](https://en.wikipedia.org/wiki/GNU_Radio) combined w/ [OsmoCom](https://osmocom.org/) code and a cheap and easily affordable Realtek chipset based DVB-T receiver already opened up a whole world of possibilities. I later on bought a [HackRF One](https://en.wikipedia.org/wiki/HackRF_One) and there also was the [rad1o badge](https://rad1o.badge.events.ccc.de/) from the german hacker camp in 2015, both offering a even broader frequency range up to 4 or 6 GHz as well as transceiver capabilities.
 
 
 <h2>0x01 H/W</h2>
 
-I recently bought some [NESDR SMArTee v2](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smartee-sdr.html) and [NESDR SMArT XDR](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smart-xtr-sdr.html) receivers for a friendly hackerspace and to dive deeper into the topic of radiowave reconnaissance. Both have a RTL2832U Demodulator/USB interface IC, the v2 has a R820T2 tuner and the XDR a E4000 tuner. They are also physically designed to fit side by side in a [RPi](https://en.wikipedia.org/wiki/Raspberry_Pi) device that might be nice to place e.g. in the attic or at some other remote location. In general, you can just look for "RTL-SDR" at your favorite shopping site and you will find lots of alternatives to the H/W mentioned above.
+I recently bought some [NESDR SMArTee v2](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smartee-sdr.html) and [NESDR SMArT XDR](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smart-xtr-sdr.html) receivers for a friendly [hackerspace](https://en.wikipedia.org/wiki/Hackerspace) and to dive deeper into the topic of radiowave reconnaissance. Both have a RTL2832U Demodulator/USB interface IC, the v2 has a R820T2 tuner and the XDR a E4000 tuner. They are also physically designed to fit side by side in a [RPi](https://en.wikipedia.org/wiki/Raspberry_Pi) device that might be nice to place e.g. in the attic or at some other remote location. In general, you can just look for "RTL SDR" at your favorite shopping site and you will find lots of cheap alternatives to the H/W mentioned above.
 
 
 <h2>0x02 S/W</h2>
@@ -16,7 +16,7 @@ Running [Debian/GNU Linux](https://en.wikipedia.org/wiki/Debian) on nearly all o
 
 <code>sudo apt install gqrx-sdr multimon-ng sox rtl-433 cubicsdr librtlsdr-dev opencpn -y</code>
 
-and then some more specific tools via python pip:
+as well as some more specific tools via python pip:
 
 <code>sudo pip install pyModeS pyrtlsdr</code>
 
@@ -29,7 +29,7 @@ and via git:
 
 <h2>0x03 POCSAG
 
-After having built/installed all required S/W, recon can be started by firing up <code>gqrx</code> on the lookout for data transmitted over the air, and the first thing I stumbled upon was a periodical broadcast of data that distantly remembered me of the old modem era, and which - after some research - turned out to be one or another form of [POCSAG](https://en.wikipedia.org/wiki/Radio-paging_code_No._1). This protocol is basically used for text paging all around the globe and wikipedia gives you a quite lengthy list of actual frequencies to play with.
+After having built and/or installed all required S/W, recon can be started by firing up <code>gqrx</code> on the lookout for data transmitted over the air, and the first thing I stumbled upon was a periodical broadcast of data that distantly remembered me of the old modem era, and which - after some research - turned out to be one or another form of [POCSAG](https://en.wikipedia.org/wiki/Radio-paging_code_No._1). This protocol is basically used for text paging (yes, skyper xD) all around the globe and wikipedia gives you a quite lengthy list of actual frequencies to play with.
 
 To be able to decode the messages into their alphanumeric form, we already installed [multimon-ng](https://github.com/EliasOenal/multimon-ng) and we can pipe the data from gqrx (after having clicked on UDP in the receiver options tab) directly into sox (to convert the raw audio to multimon-ng's native raw format) and then into multimon-ng:
 
@@ -44,7 +44,7 @@ The data comes in at bursts every few seconds and includes lots of different inf
 
 <h2>0x04 FMS FSK</h2>
 
-From reading the man page, multimon-ng decodes a bunch of different other radio transmissions, so it might make sense to add more demodulators to be able to spot them in the overwhelming amount of broadcasted data. One of these was FMS which seems to be used to transmit at least some elements of the status of police, ambulance or even governmental agencies cars either going to, arriving at or coming from their place of action. Output received might look like:
+From reading the man page, multimon-ng decodes a bunch of different other radio transmissions, so it might make sense to add more demodulators to be able to spot them in the overwhelming amount of broadcasted data. One of these was FMS which seems to be used to transmit at least some elements of the status of police, ambulance or even governmental agencies (BGS, BKA) cars either going to, arriving at or coming from their place of action. Output received might look like:
 
 <code>2022-09-08 18:04:49: FMS: xxxxxxxxxxxx (d=Rettungsdienst        a=Rheinland-Pfalz       Ort xxxx=xxx    FZG xxxx        Status 2=Einrucken/Abbr 1=LST->FZG      0=I  (ohneNA,ohneSIGNAL)        ) CRC INCORRECT (22)
 </code>
@@ -53,12 +53,22 @@ and seems to also include the state of the car's blue rooftop light and/or siren
 
 <h2>0x05 POCSAG/FMS Summary</h2>
 
-Collecting the POCSAG and FMS data over a period of time gives you a nice base for correlation and more recon, e.g. by looking up parts of the messages, and by checking out different frequencies which might contain a different spectrum of message types. What I saw so far are not only the mentioned messages, but also data from server monitoring, information about incoming tickets and/or e-mail, license plate readers at big companie's truck gates, stock market trading, uninterruptible power supplies, detailed messages of ambulance dispatches and burglary alarms to name a few. 
+Collecting the POCSAG and FMS data over a period of time gives you a nice base for correlation and more recon, e.g. by looking up parts of the messages, and by checking out different frequencies which might contain a different spectrum of message types. What I saw so far are not only the mentioned messages, but also data from 
+
+* server monitoring
+* information about incoming tickets and/or e-mail
+* license plate readers at big companie's truck gates
+* stock market trading
+* uninterruptible power supplies
+* detailed messages of ambulance dispatches
+* burglary alarms 
+
+to name only a few. 
 
 
 <h2>0x06 ADS-B</h2>
 
-So, being curious what else might be out there, I continued to inspect [ADS-B](https://en.wikipedia.org/wiki/Automatic_Dependent_Surveillance%E2%80%93Broadcast) to see if I would be able to receive information similar to the one presented at sites like https://flightradar24.com. ADS-B globally operates mostly at a predefined frequency of 1090MHz. Again, we split the process of displaying relevant data into
+So, being curious about what else might be out there, I continued to inspect [ADS-B](https://en.wikipedia.org/wiki/Automatic_Dependent_Surveillance%E2%80%93Broadcast) to see if I would be able to receive information similar to the one presented at sites like https://flightradar24.com. ADS-B globally operates mostly at a predefined frequency of 1090MHz. Again, we split the process of displaying relevant data into
 
 * setting the tuner, receiving and collecting the data
 * export/pipe that into a sort of decoder
@@ -77,7 +87,7 @@ Output might look similar to:
 
 <code>3c5eec  EWG9726_  50.29134   2.84372         444                    1088    148.06</code>
 
-and mostly includes the callsign, GPS positions, groundspeed and so on. There are tons of articles on the internet how to further visualize such data on a map, looking up the callsigns in a database of actual airplanes etc. which is exactly what sites like flightradar24 do.
+and mostly includes the callsign, GPS positions, groundspeed and so on. There are tons of articles at the internet on how to further visualize such data on a map, looking up the callsigns in a database of actual airplanes etc. which is exactly what sites like flightradar24 do. You can even easily export your own data to their servers to help in painting a more complete overall picture.
 
 
 <h2>0x07 AIS</h2>
@@ -90,27 +100,19 @@ Output might look like
 
 <code>!AIVDM,2,1,0,A,539dbM400000@K?O3@1=@4AB0PDTh98tpp00000D1@111t000030EAQQ,0*3C ( MSG: 5, REPEAT: 0, MMSI: 211495540)</code>
 
-By using the <code>-u</code> switch, we again open up a UDP service from which we can export collected data to some form of frontend like [OpenCPN](https://www.opencpn.org/) which plots the found vessels on a map and offers a target query which includes the ship's name, its length, cargo, GPS position, destination and ETA at destination. AIS seems to have a radius of about 75km and has a rather weak signal stength, but I can imagine that close to the sea you might get some quite interesting results. _(Note: Some years ago, rumors spread that those somalian pirates chose the vessel based on their cargo, which might be not that far fetched.)_
+By using the <code>-u</code> switch, we again open up a UDP service from which we can export collected data to some form of frontend like [OpenCPN](https://www.opencpn.org/) which plots the found vessels on a map and offers a target query which includes 
+
+* the ship's name
+* its length
+* cargo
+* GPS position
+* destination
+* ETA at destination
+
+AIS seems to have a radius of about 75km and has a rather weak signal stength, but I can imagine that close to the sea you might get some quite interesting results. _(Note: Some years ago, rumors spread that those somalian pirates chose the vessel based on their cargo, which might be not that far fetched.)_
 
 
-<h2>0x08 Advanced Recon</h2>
-
-When running gqrx, it becomes clear that it can only show you a small area of the radio spectrum, which is perfectly good if you know what you are looking for in a sort of "live" setup. However, if we want to observe a broader area and at the same time cover a greater time period, then we can use the very handy [rtl_power](http://kmkeen.com/rtl-power/) utility. I recommend to write different scripts for different purposes, e.g.
-
-<code>RTLPOWER_AIRBAND.sh: rtl_power -f 118M:137M:8k -g 50 -i 10 -e 1h airband.csv</code>
-
-which will monitor the whole [airband](https://en.wikipedia.org/wiki/Airband) spectrum and save the data every 10 seconds in a CSV file over a period of one hour. To visualize that data, the [heatmap.py](https://github.com/keenerd/rtl-sdr-misc/blob/master/heatmap/heatmap.py) utility comes into play which we can use in a script like
-
-<code>BUILDMAP.sh: python3 heatmap.py $1.csv $1.png ; display $1.png</code>
-
-to generate a very nice image together w/ a nice scale to identify where transmissions take place.
-
-In the airband case, you will see active radio transmissions from the pilots as bright dots, and this might greatly help you in spotting the active frequencies in your area, which you can then survey live and listen in using [NFM](https://en.wikipedia.org/wiki/Frequency_modulation#narrowband_FM) modulation.
-
-In the case of POCSAG, the fact that the transmits occur periodically creates nice dashed lines which are - depending on the signal strength - also very easy to spot in the resulting image.
-
-
-<h2>0x09 Sensor Data</h2>
+<h2>0x08 Sensor Data</h2>
 
 The next thing that I was interested in are all these weather stations and sensor data available, and sure enough, we got everything we need already installed. Instead of checking weather sites or checking my own analogue or digital thermometer, I can simply request that informations from a neighbour's weather station:
 
@@ -125,6 +127,23 @@ There are tons of other device decoding protocols implemented of which already m
 <code>Registered 145 out of 175 device decoding protocols [ 1-4 8 11-12 15-17 19-21 23 25-26 29-36 38-60 63 67-71 73-100 102-105 108-116 119 121 124-128 130-149 151-161 163-168 170-175 ]</code>
 
 and which might make it very interesting to scan other frequency ranges for such data as well.
+
+
+<h2>0x09 Advanced Recon</h2>
+
+When running <code>gqrx</code>, it becomes pretty clear that it can only show you a small portion of the radio spectrum, which is perfectly good if you know what you are looking for in a sort of "live" setup. However, if we want to observe a broader area and at the same time cover a greater time period, then we can use the very handy [rtl_power](http://kmkeen.com/rtl-power/) utility. I recommend to write different scripts for different purposes, e.g.
+
+<code>RTLPOWER_AIRBAND.sh: rtl_power -f 118M:137M:8k -g 50 -i 10 -e 1h airband.csv</code>
+
+which will monitor the whole [airband](https://en.wikipedia.org/wiki/Airband) spectrum and save the data every 10 seconds in a CSV file over a period of one hour. To visualize that data, the [heatmap.py](https://github.com/keenerd/rtl-sdr-misc/blob/master/heatmap/heatmap.py) utility comes into play which we can use in a script like
+
+<code>BUILDMAP.sh: python3 heatmap.py $1.csv $1.png ; display $1.png</code>
+
+to generate a very nice image together w/ a nice scale to identify where transmissions take place.
+
+In the airband case, you will see active radio transmissions by the pilots as bright dots, and this might greatly help you in spotting the active frequencies in your area, which you can then survey live and listen in using [NFM](https://en.wikipedia.org/wiki/Frequency_modulation#narrowband_FM) modulation.
+
+In the case of POCSAG, the fact that the transmits occur periodically creates nice dashed lines which are - depending on the signal strength - also very easy to spot in the resulting image.
 
 
 <h2>0x0A Epilogue</h2>
