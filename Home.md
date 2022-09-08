@@ -5,6 +5,7 @@ List of Knowledge
 1. [Analysing Windows Malware](Analysing-Windows-Malware) - _by F_ederico1_  
 1. [Cross Compiling Exploits](Cross-Compiling-Exploits) - _by skyper_  
 1. [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_  
+1. [LSDR - Linux and Software Defined Radio 101](LSDR) - _by d1g_
 
 ***
 
