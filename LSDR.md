@@ -113,11 +113,11 @@ By using the <code>-u</code> switch, we again open up a UDP service from which w
 AIS seems to have a radius of about 75km and has a rather weak signal strength, but I can imagine that close to the sea you might get some quite interesting results. _(Note: Some years ago, rumors spread that somalian pirates were able to choose the vessel based on its cargo, which might be not that far fetched.)_
 
 
-<h2>0x08 Sensor Data and SRD on ISM bands </h2>
+<h2>0x08 Sensor Data (SRD/ISM) </h2>
 
 The next thing that I was interested in were all these weather stations and their sensor data, and sure enough, we got everything we need already installed. 
 
-The ISM bands are located at 433.92MHz, 868MHz (Short-Range-Device / SRD ), 315MHz and 915MHz.
+Some of the [ISM bands](https://en.wikipedia.org/wiki/ISM_radio_band) are located at 433.92MHz, 868MHz ([SRD](https://en.wikipedia.org/wiki/Short-range_device#SRD860)), 315MHz and 915MHz.
 
 Instead of checking weather sites or checking my own analogue or digital thermometer, I could simply receive that informations from some random weather station of another house in proximity:
 
