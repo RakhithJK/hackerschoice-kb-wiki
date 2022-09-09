@@ -7,7 +7,7 @@ Having started my journey w/ Linux and SDR in 2012, back then I had to manually 
 
 <h2>0x01 H/W</h2>
 
-I recently got a hold of [NESDR SMArTee v2](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smartee-sdr.html) and [NESDR SMArT XDR](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smart-xtr-sdr.html) receivers at a friendly [hackerspace](https://en.wikipedia.org/wiki/Hackerspace) and wanted to dive a little bit deeper into the world of radiowave reconnaissance. Both devices have a RTL2832U Demodulator/USB interface IC, the v2 has a R820T2 tuner and the XDR a E4000 tuner. They are also physically designed to fit side by side in a [RPi](https://en.wikipedia.org/wiki/Raspberry_Pi) device that might be nice to place e.g. in the attic or at some other remote location. In general, you can just look for "RTL SDR" at your favorite shopping site and you will find lots of cheap alternatives to the H/W mentioned above.
+I recently got ahold of [NESDR SMArTee v2](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smartee-sdr.html) and [NESDR SMArT XDR](https://www.nooelec.com/store/sdr/sdr-receivers/nesdr-smart-xtr-sdr.html) receivers at a friendly [hackerspace](https://en.wikipedia.org/wiki/Hackerspace) and wanted to dive a little bit deeper into the world of radiowave reconnaissance. Both devices have a RTL2832U Demodulator/USB interface IC, the v2 has a R820T2 tuner and the XDR a E4000 tuner. They are also physically designed to fit side by side in a [RPi](https://en.wikipedia.org/wiki/Raspberry_Pi) device that might be nice to place e.g. in the attic or at some other remote location. In general, you can just look for "RTL SDR" at your favorite shopping site and you will find lots of cheap alternatives to the H/W mentioned above.
 
 
 <h2>0x02 S/W</h2>
@@ -18,7 +18,7 @@ Running [Debian GNU/Linux](https://en.wikipedia.org/wiki/Debian) on nearly all o
 
 as well as some more specific tools via python pip:
 
-<code>sudo pip install pyModeS pyrtlsdr</code>
+<code>pip install --user pyModeS pyrtlsdr</code>
 
 and via git:
 
