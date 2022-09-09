@@ -151,7 +151,22 @@ In the airband case, you will see active radio transmissions by the pilots as br
 In the case of POCSAG, the periodically occuring transmits create nice dashed lines which are - depending on the signal strength - also very easy to spot in the resulting image.
 
 
-<h2>0x0A Epilogue</h2>
+<h2>0x0A References</h2>
+
+* https://www.gnuradio.org/
+* https://osmocom.org/projects/rtl-sdr/wiki
+* https://gqrx.dk/
+* https://github.com/EliasOenal/multimon-ng
+* http://sox.sourceforge.net/
+* https://github.com/junzis/pyModes
+* https://github.com/merbanan/rtl_433
+* https://github.com/cjcliffe/CubicSDR
+* https://github.com/librtlsdr/librtlsdr
+* https://www.opencpn.org/
+* https://www.rtl-sdr.com/
+
+
+<h2>0x0B Epilogue</h2>
 
 To learn about the things documented here, I used my SDR receivers for ~ 2 weeks besides my normal work. I assume that I will extend and update this knowledge base over time as I consider the whole project work-in-progress. 
 
