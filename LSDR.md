@@ -153,6 +153,6 @@ In the case of POCSAG, the periodically occuring transmits create nice dashed li
 
 <h2>0x0A Epilogue</h2>
 
-I only used my SDR receivers for ~ 2 weeks now, and this is what I was able to get out of it besides my normal work. I assume that I will extend and update this knowledge base as I consider the whole project work-in-progress. 
+To learn about the things documented here, I used my SDR receivers for ~ 2 weeks besides my normal work. I assume that I will extend and update this knowledge base over time as I consider the whole project work-in-progress. 
 
-Shoutz go to Skyper/THC for creating this wiki besides having written and still writing great pieces of S/W, to the whole [THC Telegram Channel](https://t.me/thcorg) as well as the great community of free and open source software developers and hackers spread and co-working all over the world.
+Shoutz to Skyper/THC for creating this wiki besides having written and still writing great pieces of S/W, the 1nf1n1te v01d crew and Phenoelit (ph-neutral rocked!). It is nice to see a great community of free and open source software developers and hackers spread but still co-working all over the world and participating in global online-events like the [rc3](https://media.ccc.de/b/conferences/rc3).
