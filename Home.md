@@ -15,6 +15,7 @@ List of Knowledge
 2. [Cross Compiling Exploits](Cross-Compiling-Exploits) - _by skyper_
 3. [Hacking with the Browser's Web Console](Web-Console) - _by Dr Who_
 4. [LSDR - Linux and Software Defined Radio 101](LSDR) - _by d1g_
+5. [Hardening SEGFAULT](Hardening-SEGFAULT) - _by d1g_
 
 ***
 
