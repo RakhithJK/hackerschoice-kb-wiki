@@ -1,0 +1,219 @@
+= General Container Concepts =
+
+Already one important and deeply implemented core concept of containers and docker, the following mechanisms are widely adopted.
+
+== CGroups ==
+
+Cgroups involve resource metering and limiting:
+
+* memory
+* CPU
+* block I/O
+* network
+
+== Namespaces ==
+
+Provide process isolation, complete isolation of containers, separate file system. There are 6 types of namespaces:
+
+* mount ns - for file system.
+* UTS(Unique time sharing) ns- which checks for different hostnames of running containers
+* IPC ns - interprocess communication
+* Network ns- takes care of different ip allocation to different containers
+* PID ns - process id isolation
+* user ns- different username(uid)
+
+= Observed Abuses =
+
+When going mainly public mid octover, it occured that there were quite some cases of resource exhaustion and denial of service, which is why it seems that more limits are needed to ensure users cannot wreak that big amount of havoc. 
+
+== Fork Bombs ==
+
+* Some ppl simply build forkbombs
+
+== Storage Space Exhaustion ==
+
+* another was able to fill up HD space by increasing /etc/hosts up to 20GB - that file is treated special by docker and by default does not receive the restrictions which are set on the fs itself:
+
+ cat /dev/urandom >>/etc/hosts
+
+This could be addressed via a
+
+ --storage_opt size=100m
+
+option (found via @deadpackets [https://stackoverflow.com/questions/72926872/how-to-set-the-maximum-storage-space-allowed-in-a-docker-containers-writable-la here])
+
+'''Note: This requires the overlay over xfs using the 'pquota' mount options.''' but /etc/hosts is treated special within docker.
+
+== Inode Resource Exhaustion ==
+
+Another hacker just created billions of 1B sized files so that the whole kernel just crashed xD
+
+= Hardening: Resource Limits =
+
+== Apparmor ==
+
+General search results [https://duckduckgo.com/?t=ffab&q=docker+apparmor&ia=web here].
+
+This could be implemented either on the docker daemon/process itself or deployed in the instance (or both), more information [https://docs.docker.com/engine/security/apparmor/ here]. The basic idea is to restrict a processes access to files and capabilities. Docker can be started using such a profile via
+
+ $ docker run --rm -it --security-opt apparmor=your_profile hello-world
+
+A docker default profile is available [https://github.com/moby/moby/tree/master/contrib/apparmor here] or [https://wikitech.wikimedia.org/wiki/Docker/apparmor here], a comparison of apparmor vs. seccomp vs. capabilities can be found [https://security.stackexchange.com/questions/196881/docker-when-to-use-apparmor-vs-seccomp-vs-cap-drop here].
+
+== Docker ==
+
+We entered a [https://duckduckgo.com/?t=ffab&q=docker+resource+limiting&ia=web simple search] and found quite some options there:
+
+=== Enable Limiting ===
+
+In /etc/default/grub, set
+
+ GRUB_CMDLINE_LINUX="cdgroup_enable=memory swapaccount=1"
+
+then
+
+ sudo update-grub
+
+=== Set Maximum Memory Access ===
+
+ sudo docker run -it --memory="1g" ubuntu
+
+=== Set Swap to Disk Memory Limit ===
+
+ sudo docker run -it --memory="1g" --memory-swap="2g" ubuntu
+
+=== Set additional Soft Limit ===
+
+ sudo docker run -it --memory="1g" --memory-reservation="750m" ubuntu
+
+=== Limit CPU Usage ===
+
+ sudo docker run -it --cpus="1.0" ubuntu
+ sudo docker run -it --cpus-shares="700" ubuntu
+
+=== Limit Processes ===
+
+Info from [https://dockerlabs.collabnix.com/advanced/security/cgroups/ here]:
+
+ sudo docker run -it --pids-limit 32 ...
+
+=== Systemd Slice ===
+
+* Create a file to /etc/systemd/system/docker_limit.slice
+
+ [Unit]
+ Description=Slice that limits docker resources
+ Before=slices.target
+ 
+ [Slice]
+ CPUAccounting=true
+ CPUQuota=700%
+ #Memory Management
+ MemoryAccounting=true
+ MemoryLimit=25G
+
+* Start unit: systemctl start docker_limit.slice
+
+* Edit /etc/docker/daemon.json
+
+ {
+   "cgroup-parent": "/docker_limit.slice"
+ }
+
+* Restart Docker daemon: systemctl restart docker
+
+* In order to verify all works as expected: systemd-cgtop, you should see processes listed under docker_limit.slice
+
+=== Docker Ulimit ===
+
+Taken from [https://stackoverflow.com/questions/24318543/how-to-set-ulimit-file-descriptor-on-docker-container-the-image-tag-is-phusion here], we can set it in the config or use it at the commandline:
+
+ docker run --ulimit nofile=<softlimit>:<hardlimit>
+
+=== Docker Storage Size ===
+
+Found by @deadpackets via [https://stackoverflow.com/questions/72926872/how-to-set-the-maximum-storage-space-allowed-in-a-docker-containers-writable-la here]:
+
+ --storage_opt size=100m
+
+which is supported only for overlay over xfs with 'pquota' mount option.
+
+== Amazon ECS Limits ==
+
+Same approach, more info available [https://towardsaws.com/how-to-configuring-linux-ulimit-with-docker-and-aws-ecs-599c71f00473?gi=6f257ca7a4a6 here].
+
+== Ulimit ==
+
+This can be set permanent via /etc/security/limits.conf. If we run it on a current system, it gives us:
+
+ ┌──(root💀sf-TipSock)-[/root]
+ └─# ulimit -a 
+ -t: cpu time (seconds)              unlimited
+ -f: file size (blocks)              unlimited
+ -d: data seg size (kbytes)          unlimited
+ -s: stack size (kbytes)             8192
+ -c: core file size (blocks)         unlimited
+ -m: resident set size (kbytes)      unlimited
+ -u: processes                       unlimited
+ -n: file descriptors                256
+ -l: locked-in-memory size (kbytes)  64
+ -v: address space (kbytes)          unlimited
+ -x: file locks                      unlimited
+ -i: pending signals                 15450
+ -q: bytes in POSIX msg queues       819200
+ -e: max nice                        0
+ -r: max rt priority                 0
+ -N 15: rt cpu time (microseconds)   unlimited
+
+=== Limit Processes ===
+
+To achieve this to prevent fork bombs, we can first set it to a reasonable number:
+
+ ulimit -u 10
+ -u: processes                       10
+
+and then try to fork bomb:
+
+ :(){  :|:& };:
+
+which unhappily still works - we can still relogin, and we had to type '''halt''' in the end to kill it xD
+
+=== Limit File Size ===
+
+ ulimit -f 50
+
+=== Limit Maximum Virtual Memory ===
+
+ ulimit -v  1000
+
+=== Limit Number of Open Files ===
+
+ ulimit -n
+
+= Network Hardening: Packet Limits =
+
+There are plenty of mechanisms to control the amount of packets using netfilter extensions like ''connlimit, limit or hashlimit''. Depending on what to regulate, these filtering rules should be placed in the ''filter'' (for input and forward) or the ''mangle'' (additionally for prerouting and postrouting) table.
+
+== Netfilter Connlimit ==
+
+This targets port 80:
+
+ iptables -I INPUT -p tcp --dport 80 -m connlimit --connlimit-above 20 --connlimit-mask 24 -j DROP
+
+== Netfilter Limit  ==
+
+This targets SYN-Packets:
+
+ iptables -N synflood
+ iptables -A synflood -m limit --limit 10/second --limit-burst 24 -j RETURN
+ iptables -A synflood -j REJECT
+ iptables -A INPUT -p tcp --syn -j synflood
+
+== Netfilter Hashlimit ==
+
+ iptables -N syn-flood
+ iptables -A INPUT -p tcp --syn -j syn-flood
+ iptables -A syn-flood -p tcp --syn -m hashlimit --hashlimit 200/sec --hashlimit-burst 3 --hashlimit-htable-expire \
+ 300000 --hashlimit-mode srcip  --hashlimit-name testlimit -j RETURN
+ iptables -A syn-flood -m recent --name blacklist --set -j DROP
+ iptables -A INPUT -j syn-flood
